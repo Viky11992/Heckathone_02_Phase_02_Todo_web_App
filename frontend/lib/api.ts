@@ -2,7 +2,7 @@ import { TaskResponse, TaskCreate, TaskUpdate, TaskToggleComplete } from './type
 import { authService } from './auth-service';
 
 // Base API URL from environment or default
-const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL || 'http://localhost:8000/api';
+const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL || 'https://heckathone02phase02todowebapp-production.up.railway.app/api';
 
 // API client class to handle all API requests
 class ApiClient {

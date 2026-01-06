@@ -1,55 +1,126 @@
-# [PROJECT_NAME] Constitution
-<!-- Example: Spec Constitution, TaskFlow Constitution, etc. -->
+# Todo Full-Stack Web Application Constitution
 
 ## Core Principles
 
-### [PRINCIPLE_1_NAME]
-<!-- Example: I. Library-First -->
-[PRINCIPLE_1_DESCRIPTION]
-<!-- Example: Every feature starts as a standalone library; Libraries must be self-contained, independently testable, documented; Clear purpose required - no organizational-only libraries -->
+### I. Spec-Driven Development
+All development follows documented specifications using the Agentic Dev Stack workflow (Spec → Plan → Tasks → Implement). Every feature must be specified before implementation begins, ensuring alignment between requirements and deliverables.
 
-### [PRINCIPLE_2_NAME]
-<!-- Example: II. CLI Interface -->
-[PRINCIPLE_2_DESCRIPTION]
-<!-- Example: Every library exposes functionality via CLI; Text in/out protocol: stdin/args → stdout, errors → stderr; Support JSON + human-readable formats -->
+### II. Full-Stack Architecture
+Maintain clear separation between frontend (Next.js) and backend (FastAPI) with well-defined API contracts. Both layers must be independently deployable and scalable.
 
-### [PRINCIPLE_3_NAME]
-<!-- Example: III. Test-First (NON-NEGOTIABLE) -->
-[PRINCIPLE_3_DESCRIPTION]
-<!-- Example: TDD mandatory: Tests written → User approved → Tests fail → Then implement; Red-Green-Refactor cycle strictly enforced -->
+### III. Security-First Approach
+Implement authentication and authorization from the start using Better Auth with JWT tokens. All API endpoints require valid authentication tokens, and users can only access their own data.
 
-### [PRINCIPLE_4_NAME]
-<!-- Example: IV. Integration Testing -->
-[PRINCIPLE_4_DESCRIPTION]
-<!-- Example: Focus areas requiring integration tests: New library contract tests, Contract changes, Inter-service communication, Shared schemas -->
+### IV. Type Safety and Validation
+Use TypeScript for frontend and Pydantic models for backend to ensure type safety. All user inputs must be validated and sanitized before processing.
 
-### [PRINCIPLE_5_NAME]
-<!-- Example: V. Observability, VI. Versioning & Breaking Changes, VII. Simplicity -->
-[PRINCIPLE_5_DESCRIPTION]
-<!-- Example: Text I/O ensures debuggability; Structured logging required; Or: MAJOR.MINOR.BUILD format; Or: Start simple, YAGNI principles -->
+### V. Performance and Reliability
+Optimize for sub-2s initial load times on frontend and sub-200ms API response times on backend. Implement proper error handling, logging, and monitoring.
 
-### [PRINCIPLE_6_NAME]
+### VI. User Experience Focus
+Design intuitive, responsive interfaces that work across all device sizes. Prioritize user workflows and provide clear feedback for all actions.
 
+## Technology Stack Standards
 
-[PRINCIPLE__DESCRIPTION]
+### Frontend (Next.js 16+)
+- Use App Router for routing and navigation
+- Server components by default, client components only when interactivity is required
+- Tailwind CSS for styling with consistent design system
+- TypeScript for type safety and better developer experience
+- Follow React best practices and performance optimization techniques
 
-## [SECTION_2_NAME]
-<!-- Example: Additional Constraints, Security Requirements, Performance Standards, etc. -->
+### Backend (Python FastAPI)
+- Pydantic models for request/response validation and serialization
+- SQLModel for database operations with proper ORM patterns
+- Proper error handling with HTTPException and custom error responses
+- Automatic API documentation via OpenAPI/Swagger UI
+- Structured logging for observability and debugging
 
-[SECTION_2_CONTENT]
-<!-- Example: Technology stack requirements, compliance standards, deployment policies, etc. -->
+### Database (Neon Serverless PostgreSQL)
+- Proper indexing for performance-critical queries
+- Foreign key constraints to maintain data integrity
+- Connection pooling for efficient resource utilization
+- Database migrations for schema evolution
+- Use SQLModel for all database interactions
 
-## [SECTION_3_NAME]
-<!-- Example: Development Workflow, Review Process, Quality Gates, etc. -->
+### Authentication (Better Auth with JWT)
+- JWT tokens for stateless authentication between frontend and backend
+- Proper token expiration and refresh mechanisms
+- Secure password handling and storage
+- Session management with proper cleanup
+- Shared secret key (BETTER_AUTH_SECRET) for token verification
 
-[SECTION_3_CONTENT]
-<!-- Example: Code review requirements, testing gates, deployment approval process, etc. -->
+## Development Workflow
+
+### Spec-First Development
+1. Write comprehensive specifications before implementation
+2. Use Claude Code and Spec-Kit Plus for automated development
+3. Reference specifications with @specs/ notation during implementation
+4. Update specifications when requirements change
+
+### Quality Standards
+- Comprehensive unit and integration tests for all critical functionality
+- Code reviews required for all pull requests
+- Automated testing and linting in CI/CD pipeline
+- Documentation for all public APIs and components
+- Performance benchmarks and monitoring
+
+### API Design Principles
+- RESTful API design with consistent endpoint patterns
+- Proper HTTP status codes and error responses
+- Input validation and sanitization for all endpoints
+- Rate limiting and security headers
+- Versioning strategy for API evolution
+
+## Security Requirements
+
+### Authentication and Authorization
+- JWT token-based authentication for all API endpoints
+- User isolation - each user can only access their own data
+- Proper token expiration and refresh mechanisms
+- Secure session management
+- Input validation and sanitization to prevent injection attacks
+
+### Data Protection
+- Encryption of sensitive data in transit and at rest
+- Proper handling of user credentials and personal information
+- Audit logging for security-relevant events
+- Regular security assessments and vulnerability scanning
+
+## Performance Standards
+
+### Frontend Performance
+- Sub-2s initial page load time
+- Optimized asset delivery (images, scripts, stylesheets)
+- Client-side caching strategies
+- Lazy loading for non-critical resources
+- Responsive design for all device sizes
+
+### Backend Performance
+- Sub-200ms API response times for 95th percentile
+- Proper database indexing for query optimization
+- Connection pooling and resource management
+- Caching strategies for frequently accessed data
+- Efficient data serialization and transfer
 
 ## Governance
-<!-- Example: Constitution supersedes all other practices; Amendments require documentation, approval, migration plan -->
 
-[GOVERNANCE_RULES]
-<!-- Example: All PRs/reviews must verify compliance; Complexity must be justified; Use [GUIDANCE_FILE] for runtime development guidance -->
+### Decision Making
+- Architectural decisions documented in ADRs (Architecture Decision Records)
+- Team consensus required for major architectural changes
+- Regular architecture reviews and retrospectives
+- Clear ownership and accountability for components
 
-**Version**: [CONSTITUTION_VERSION] | **Ratified**: [RATIFICATION_DATE] | **Last Amended**: [LAST_AMENDED_DATE]
-<!-- Example: Version: 2.1.1 | Ratified: 2025-06-13 | Last Amended: 2025-07-16 -->
+### Code Quality
+- All code must follow established style guides and conventions
+- Automated linting and formatting enforced in CI/CD
+- Comprehensive test coverage (minimum 80% for critical paths)
+- Regular refactoring and technical debt management
+
+### Compliance and Standards
+- This constitution supersedes all other development practices
+- All pull requests must comply with these principles
+- Regular constitution reviews and updates as needed
+- New team members must acknowledge and understand these principles
+
+**Version**: 1.0.0 | **Ratified**: 2026-01-01 | **Last Amended**: 2026-01-01

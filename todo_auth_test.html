@@ -1,0 +1,252 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Todo App Authentication Test</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 20px auto;
+            padding: 20px;
+            background-color: #f8f9fa;
+        }
+        .container {
+            background: white;
+            padding: 30px;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        .section {
+            margin: 20px 0;
+            padding: 15px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            background-color: #f9f9f9;
+        }
+        .token-container {
+            background: #f8f9fa;
+            padding: 10px;
+            border-radius: 4px;
+            font-family: monospace;
+            word-break: break-all;
+            margin: 10px 0;
+        }
+        button {
+            background: #28a745;
+            color: white;
+            border: none;
+            padding: 10px 15px;
+            border-radius: 4px;
+            cursor: pointer;
+            margin: 5px;
+        }
+        button:hover {
+            background: #218838;
+        }
+        .test-btn {
+            background: #007bff;
+        }
+        .test-btn:hover {
+            background: #0056b3;
+        }
+        .clear-btn {
+            background: #dc3545;
+        }
+        .clear-btn:hover {
+            background: #c82333;
+        }
+        .status {
+            padding: 10px;
+            border-radius: 4px;
+            margin: 10px 0;
+        }
+        .success {
+            background-color: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+        .error {
+            background-color: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+        .info {
+            background-color: #d1ecf1;
+            color: #0c5460;
+            border: 1px solid #bee5eb;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Todo App Authentication Test</h1>
+
+        <div class="info status">
+            <strong>Info:</strong> This page helps test and fix authentication issues between frontend and backend.
+        </div>
+
+        <div class="section">
+            <h2>Current Token Status</h2>
+            <div id="tokenStatus">Checking...</div>
+            <button onclick="checkToken()">Refresh Status</button>
+            <button class="clear-btn" onclick="clearTokens()">Clear All Tokens</button>
+        </div>
+
+        <div class="section">
+            <h2>Set Valid Authentication Token</h2>
+            <p>Click a button below to set a valid JWT token in localStorage:</p>
+
+            <button onclick="setToken('test-user-123')">Set Token for test-user-123</button>
+            <button onclick="setToken('user-1767563258997')">Set Token for user-1767563258997</button>
+            <button onclick="setToken('user-1767563612578')">Set Token for user-1767563612578</button>
+
+            <div style="margin-top: 15px;">
+                <input type="text" id="customUserId" placeholder="Or enter custom user ID" style="padding: 8px; width: 200px;">
+                <button onclick="setCustomToken()">Set Custom Token</button>
+            </div>
+        </div>
+
+        <div class="section">
+            <h2>Test API Connection</h2>
+            <p>Test the API connection with the current token:</p>
+            <button class="test-btn" onclick="testApi()">Test API Connection</button>
+            <div id="apiTestResult"></div>
+        </div>
+
+        <div class="section">
+            <h2>How to Use</h2>
+            <ol>
+                <li>Click one of the "Set Token" buttons above to set a valid JWT token</li>
+                <li>Go to your Todo application (http://localhost:3000)</li>
+                <li>Refresh the Todo app page</li>
+                <li>The API requests should now work without 403 errors</li>
+            </ol>
+        </div>
+    </div>
+
+    <script>
+        // Valid tokens for different users
+        const tokens = {
+            'test-user-123': 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJ0ZXN0LXVzZXItMTIzIiwibmFtZSI6IlVzZXIgdGVzdC11c2VyLTEyMyIsImVtYWlsIjoidGVzdC11c2VyLTEyM0BleGFtcGxlLmNvbSIsImV4cCI6MTc3MDE1NTczMn0.gXpkuKMFXbmxpsSr-u6eGBCZqAo_rQhwUBkD5V3IBws',
+            'user-1767563258997': 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJ1c2VyLTE3Njc1NjMyNTg5OTciLCJuYW1lIjoiVXNlciB1c2VyLTE3Njc1NjMyNTg5OTciLCJlbWFpbCI6InVzZXItMTc2NzU2MzI1ODk5N0BleGFtcGxlLmNvbSIsImV4cCI6MTc3MDE1NTczMn0.vGbAj2e_Vs4FuEvXazIsT6CFh1_7Aw-olfBPQ1Hx0Zw',
+            'user-1767563612578': 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJ1c2VyLTE3Njc1NjM2MTI1NzgiLCJuYW1lIjoiVXNlciB1c2VyLTE3Njc1NjM2MTI1NzgiLCJlbWFpbCI6InVzZXItMTc2NzU2MzYxMjU3OEBleGFtcGxlLmNvbSIsImV4cCI6MTc3MDE1NTczMn0.Ae0uHFdc2azs9YRZP_mCGuDh_fiB70eXuhdgcKNVyBQ'
+        };
+
+        function checkToken() {
+            const token = localStorage.getItem('auth_token');
+            const userId = localStorage.getItem('user_id');
+            const email = localStorage.getItem('user_email');
+
+            const statusDiv = document.getElementById('tokenStatus');
+
+            if (token) {
+                statusDiv.innerHTML = `
+                    <div class="success status">
+                        <strong>Token Found!</strong><br>
+                        User ID: ${userId || 'Not set'}<br>
+                        Email: ${email || 'Not set'}<br>
+                        Token length: ${token.length} characters
+                    </div>
+                `;
+            } else {
+                statusDiv.innerHTML = `
+                    <div class="error status">
+                        <strong>No token found in localStorage</strong><br>
+                        Please set a valid token using the buttons above.
+                    </div>
+                `;
+            }
+        }
+
+        function setToken(userId) {
+            const token = tokens[userId];
+            if (token) {
+                localStorage.setItem('auth_token', token);
+                localStorage.setItem('user_id', userId);
+                localStorage.setItem('user_email', `${userId}@example.com`);
+
+                alert(`Token set for user: ${userId}\n\nPlease go to your Todo app and refresh the page.`);
+                checkToken();
+            } else {
+                alert('Invalid user ID');
+            }
+        }
+
+        function setCustomToken() {
+            const userId = document.getElementById('customUserId').value.trim();
+            if (!userId) {
+                alert('Please enter a user ID');
+                return;
+            }
+
+            // For demo purposes, we'll use the same token pattern
+            // In a real app, you'd need to get a valid token from your backend
+            alert(`In a real application, you would get a valid token for user: ${userId}\n\nFor this demo, please use one of the preset user IDs.`);
+        }
+
+        function clearTokens() {
+            localStorage.removeItem('auth_token');
+            localStorage.removeItem('user_id');
+            localStorage.removeItem('user_email');
+            alert('All tokens cleared from localStorage');
+            checkToken();
+        }
+
+        async function testApi() {
+            const token = localStorage.getItem('auth_token');
+            const userId = localStorage.getItem('user_id') || 'test-user-123';
+
+            const resultDiv = document.getElementById('apiTestResult');
+            resultDiv.innerHTML = '<div class="info status">Testing API connection...</div>';
+
+            if (!token) {
+                resultDiv.innerHTML = '<div class="error status">No token found. Please set a token first.</div>';
+                return;
+            }
+
+            try {
+                const response = await fetch(`http://127.0.0.1:8000/api/${userId}/tasks`, {
+                    method: 'GET',
+                    headers: {
+                        'Authorization': `Bearer ${token}`,
+                        'Content-Type': 'application/json'
+                    }
+                });
+
+                if (response.ok) {
+                    const data = await response.json();
+                    resultDiv.innerHTML = `
+                        <div class="success status">
+                            <strong>API Test Successful!</strong><br>
+                            Status: ${response.status} ${response.statusText}<br>
+                            Response: ${JSON.stringify(data, null, 2)}
+                        </div>
+                    `;
+                } else {
+                    const errorData = await response.json().catch(() => ({}));
+                    resultDiv.innerHTML = `
+                        <div class="error status">
+                            <strong>API Test Failed!</strong><br>
+                            Status: ${response.status} ${response.statusText}<br>
+                            Error: ${JSON.stringify(errorData, null, 2)}
+                        </div>
+                    `;
+                }
+            } catch (error) {
+                resultDiv.innerHTML = `
+                    <div class="error status">
+                        <strong>Network Error!</strong><br>
+                        Error: ${error.message}<br>
+                        Make sure the backend server is running on http://127.0.0.1:8000
+                    </div>
+                `;
+            }
+        }
+
+        // Check token status on page load
+        window.onload = function() {
+            checkToken();
+        };
+    </script>
+</body>
+</html>

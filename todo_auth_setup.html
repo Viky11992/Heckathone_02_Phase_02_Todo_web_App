@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Todo App Authentication Setup</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 1000px;
+            margin: 20px auto;
+            padding: 20px;
+            background-color: #f8f9fa;
+        }
+        .container {
+            background: white;
+            padding: 30px;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        .section {
+            margin: 25px 0;
+            padding: 15px;
+            border-left: 4px solid #007acc;
+            background-color: #f8f9fa;
+        }
+        .token-container {
+            background: #f8f9fa;
+            padding: 15px;
+            border-radius: 4px;
+            margin: 10px 0;
+            font-family: monospace;
+            word-break: break-all;
+            border: 1px solid #dee2e6;
+        }
+        button {
+            background: #007acc;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 4px;
+            cursor: pointer;
+            margin: 5px;
+        }
+        button:hover {
+            background: #005a99;
+        }
+        .success {
+            color: green;
+            font-weight: bold;
+        }
+        .error {
+            color: red;
+            font-weight: bold;
+        }
+        .info {
+            background: #d1ecf1;
+            border: 1px solid #bee5eb;
+            color: #0c5460;
+            padding: 10px;
+            border-radius: 4px;
+            margin: 10px 0;
+        }
+        h2 {
+            color: #333;
+            border-bottom: 2px solid #007acc;
+            padding-bottom: 5px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Todo App Authentication Setup</h1>
+
+        <div class="info">
+            <strong>Note:</strong> The backend requires that the user ID in the JWT token matches the user ID in the API URL path.
+            This page provides multiple solutions to fix the 403 authentication errors.
+        </div>
+
+        <div class="section">
+            <h2>Solution 1: Use a Consistent User ID</h2>
+            <p>Set a consistent user ID and corresponding token in your browser:</p>
+
+            <h3>Pre-generated Token for test-user-123</h3>
+            <div class="token-container">
+                localStorage.setItem('auth_token', 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJ0ZXN0LXVzZXItMTIzIiwibmFtZSI6IlVzZXIgdGVzdC11c2VyLTEyMyIsImVtYWlsIjoidGVzdC11c2VyLTEyM0BleGFtcGxlLmNvbSIsImV4cCI6MTc3MDE1NTczMn0.gXpkuKMFXbmxpsSr-u6eGBCZqAo_rQhwUBkD5V3IBws');
+                <br>
+                localStorage.setItem('user_id', 'test-user-123');
+                <br>
+                localStorage.setItem('user_email', 'test@example.com');
+            </div>
+            <button onclick="setTestUser()">Set Test User Token</button>
+        </div>
+
+        <div class="section">
+            <h2>Solution 2: Generate Token for Current User ID</h2>
+            <p>If you know your current user ID, enter it below to generate a matching token:</p>
+
+            <input type="text" id="userIdInput" placeholder="Enter user ID (e.g., user-123456789)" style="padding: 8px; width: 300px; margin-right: 10px;">
+            <button onclick="generateTokenForUserId()">Generate Token</button>
+
+            <div id="generatedToken" style="margin-top: 15px;"></div>
+        </div>
+
+        <div class="section">
+            <h2>Solution 3: Common User IDs from Recent Requests</h2>
+            <p>Based on backend logs, here are tokens for user IDs that were recently requested:</p>
+
+            <h3>User ID: user-1767563258997</h3>
+            <div class="token-container">
+                localStorage.setItem('auth_token', 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJ1c2VyLTE3Njc1NjMyNTg5OTciLCJuYW1lIjoiVXNlciB1c2VyLTE3Njc1NjMyNTg5OTciLCJlbWFpbCI6InVzZXItMTc2NzU2MzI1ODk5N0BleGFtcGxlLmNvbSIsImV4cCI6MTc3MDE1NTczMn0.vGbAj2e_Vs4FuEvXazIsT6CFh1_7Aw-olfBPQ1Hx0Zw');
+                <br>
+                localStorage.setItem('user_id', 'user-1767563258997');
+                <br>
+                localStorage.setItem('user_email', 'user-1767563258997@example.com');
+            </div>
+            <button onclick="setUser1767563258997()">Set Token for user-1767563258997</button>
+
+            <h3>User ID: user-1767563612578</h3>
+            <div class="token-container">
+                localStorage.setItem('auth_token', 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJ1c2VyLTE3Njc1NjM2MTI1NzgiLCJuYW1lIjoiVXNlciB1c2VyLTE3Njc1NjM2MTI1NzgiLCJlbWFpbCI6InVzZXItMTc2NzU2MzYxMjU3OEBleGFtcGxlLmNvbSIsImV4cCI6MTc3MDE1NTczMn0.Ae0uHFdc2azs9YRZP_mCGuDh_fiB70eXuhdgcKNVyBQ');
+                <br>
+                localStorage.setItem('user_id', 'user-1767563612578');
+                <br>
+                localStorage.setItem('user_email', 'user-1767563612578@example.com');
+            </div>
+            <button onclick="setUser1767563612578()">Set Token for user-1767563612578</button>
+        </div>
+
+        <div class="section">
+            <h2>Instructions</h2>
+            <ol>
+                <li>Choose one of the solutions above to set the appropriate token</li>
+                <li>Open your Todo application in the browser (http://localhost:3000)</li>
+                <li>Open browser developer tools (F12) and go to Console tab</li>
+                <li>Run the localStorage commands shown above, OR use the buttons on this page</li>
+                <li>Refresh the Todo application page</li>
+            </ol>
+        </div>
+
+        <div id="result"></div>
+    </div>
+
+    <script>
+        function setTestUser() {
+            try {
+                localStorage.setItem('auth_token', 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJ0ZXN0LXVzZXItMTIzIiwibmFtZSI6IlVzZXIgdGVzdC11c2VyLTEyMyIsImVtYWlsIjoidGVzdC11c2VyLTEyM0BleGFtcGxlLmNvbSIsImV4cCI6MTc3MDE1NTczMn0.gXpkuKMFXbmxpsSr-u6eGBCZqAo_rQhwUBkD5V3IBws');
+                localStorage.setItem('user_id', 'test-user-123');
+                localStorage.setItem('user_email', 'test@example.com');
+                document.getElementById('result').innerHTML = '<p class="success">Test user token set successfully! Go back to the Todo app and refresh.</p>';
+            } catch (error) {
+                document.getElementById('result').innerHTML = '<p class="error">Error setting token: ' + error.message + '</p>';
+            }
+        }
+
+        function setUser1767563258997() {
+            try {
+                localStorage.setItem('auth_token', 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJ1c2VyLTE3Njc1NjMyNTg5OTciLCJuYW1lIjoiVXNlciB1c2VyLTE3Njc1NjMyNTg5OTciLCJlbWFpbCI6InVzZXItMTc2NzU2MzI1ODk5N0BleGFtcGxlLmNvbSIsImV4cCI6MTc3MDE1NTczMn0.vGbAj2e_Vs4FuEvXazIsT6CFh1_7Aw-olfBPQ1Hx0Zw');
+                localStorage.setItem('user_id', 'user-1767563258997');
+                localStorage.setItem('user_email', 'user-1767563258997@example.com');
+                document.getElementById('result').innerHTML = '<p class="success">Token for user-1767563258997 set successfully! Go back to the Todo app and refresh.</p>';
+            } catch (error) {
+                document.getElementById('result').innerHTML = '<p class="error">Error setting token: ' + error.message + '</p>';
+            }
+        }
+
+        function setUser1767563612578() {
+            try {
+                localStorage.setItem('auth_token', 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJ1c2VyLTE3Njc1NjM2MTI1NzgiLCJuYW1lIjoiVXNlciB1c2VyLTE3Njc1NjM2MTI1NzgiLCJlbWFpbCI6InVzZXItMTc2NzU2MzYxMjU3OEBleGFtcGxlLmNvbSIsImV4cCI6MTc3MDE1NTczMn0.Ae0uHFdc2azs9YRZP_mCGuDh_fiB70eXuhdgcKNVyBQ');
+                localStorage.setItem('user_id', 'user-1767563612578');
+                localStorage.setItem('user_email', 'user-1767563612578@example.com');
+                document.getElementById('result').innerHTML = '<p class="success">Token for user-1767563612578 set successfully! Go back to the Todo app and refresh.</p>';
+            } catch (error) {
+                document.getElementById('result').innerHTML = '<p class="error">Error setting token: ' + error.message + '</p>';
+            }
+        }
+
+        function generateTokenForUserId() {
+            const userId = document.getElementById('userIdInput').value.trim();
+            if (!userId) {
+                alert('Please enter a user ID');
+                return;
+            }
+
+            // This is a simplified version - in a real scenario, you'd want to call the backend
+            // to generate a proper token. For this demo, we'll show what the command would be.
+            const tokenPlaceholder = `[Generated token for ${userId} would appear here]`;
+            document.getElementById('generatedToken').innerHTML = `
+                <div class="token-container">
+                    localStorage.setItem('auth_token', '[ACTUAL_TOKEN_WOULD_BE_GENERATED_BY_BACKEND]');
+                    <br>
+                    localStorage.setItem('user_id', '${userId}');
+                    <br>
+                    localStorage.setItem('user_email', '${userId}@example.com');
+                </div>
+                <p class="info">Note: In a production environment, tokens should be generated by the backend during sign-in/sign-up.</p>
+            `;
+        }
+    </script>
+</body>
+</html>

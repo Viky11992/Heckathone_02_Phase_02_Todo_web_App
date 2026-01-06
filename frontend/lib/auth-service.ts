@@ -1,7 +1,7 @@
 // Auth service to handle authentication with backend
 // This service will generate and validate tokens with the backend API
 
-const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL || 'https://heckathone02phase02todowebapp-production-c313.up.railway.app/api';
+const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL || 'https://heckathone02phase02todowebapp-production-c313.up.railway.app';
 
 class AuthService {
   // Generate a new JWT token from the backend

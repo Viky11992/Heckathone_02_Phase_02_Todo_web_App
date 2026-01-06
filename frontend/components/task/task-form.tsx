@@ -1,14 +1,14 @@
 'use client';
 
 import { useState } from 'react';
-import { TaskCreate } from '@/lib/types';
+import { Task, TaskCreate } from '@/lib/types';
 import { api } from '@/lib/api';
 
 interface TaskFormProps {
   userId: string;
   onSuccess?: () => void;
   onCancel?: () => void;
-  task?: { id: number; title: string; description: string } | null; // For editing
+  task?: Task | null; // For editing
 }
 
 export default function TaskForm({ userId, onSuccess, onCancel, task }: TaskFormProps) {

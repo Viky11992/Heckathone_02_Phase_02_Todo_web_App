@@ -45,9 +45,9 @@ class ApiClient {
             name: userEmail.split('@')[0]
           });
 
-          if (tokenResponse.success) {
+          if (tokenResponse.success && tokenResponse.token) {
             token = tokenResponse.token;
-            authService.setAuthData(token, userId, userEmail);
+            authService.setAuthData(token as string, userId, userEmail || '');
           }
         } catch (error) {
           console.error('Failed to generate token:', error);
@@ -63,9 +63,9 @@ class ApiClient {
             name: userEmail.split('@')[0]
           });
 
-          if (tokenResponse.success) {
+          if (tokenResponse.success && tokenResponse.token) {
             token = tokenResponse.token;
-            authService.setAuthData(token, newUserId, userEmail);
+            authService.setAuthData(token as string, newUserId, userEmail || '');
           }
         } catch (error) {
           console.error('Failed to generate token:', error);
@@ -110,8 +110,8 @@ class ApiClient {
               name: `User ${userId}`
             });
 
-            if (tokenResponse.success) {
-              authService.setAuthData(tokenResponse.token, userId, localStorage.getItem('user_email') || `${userId}@example.com`);
+            if (tokenResponse.success && tokenResponse.token) {
+              authService.setAuthData(tokenResponse.token as string, userId, localStorage.getItem('user_email') || `${userId}@example.com`);
 
               // Retry the request with the new token
               const retryHeaders = {

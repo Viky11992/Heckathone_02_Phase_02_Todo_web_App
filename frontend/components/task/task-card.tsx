@@ -50,7 +50,7 @@ export default function TaskCard({ task, userId, onTaskUpdate }: TaskCardProps) 
       <div className="bg-white p-4 rounded-lg shadow border border-gray-200">
         <TaskForm
           userId={userId}
-          task={{ id: task.id, title: task.title, description: task.description || '' }}
+          task={task}
           onSuccess={() => {
             setIsEditing(false);
             onTaskUpdate();

@@ -29,7 +29,15 @@ export default function TaskDetailPage() {
       setLoading(true);
       setError(null);
       // The API call expects the task ID to be a number
-      const taskId = Array.isArray(id) ? parseInt(id[0], 10) : parseInt(id, 10);
+      if (!id) {
+        setError('Task ID is required');
+        return;
+      }
+      const taskId = Array.isArray(id) ? parseInt(id[0], 10) : parseInt(id as string, 10);
+      if (isNaN(taskId)) {
+        setError('Invalid task ID');
+        return;
+      }
       const response = await api.getTask(user!.id, taskId);
       setTask(response.data);
     } catch (err: any) {
@@ -129,7 +137,7 @@ export default function TaskDetailPage() {
         {isEditing ? (
           <TaskForm
             userId={user.id}
-            task={{ id: task.id, title: task.title, description: task.description || '' }}
+            task={task}
             onSuccess={() => {
               setIsEditing(false);
               loadTask(); // Reload the task to update the UI

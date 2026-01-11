@@ -1,0 +1,22 @@
+# Render deployment configuration
+services:
+  - type: web
+    name: todo-backend
+    env: python
+    region: frankfurt  # or oregon, ohio, singapore depending on your preferred region
+    buildCommand: pip install -r requirements.txt
+    startCommand: sh start.sh
+    envVars:
+      - key: DATABASE_URL
+        sync: false  # Will be set in the Render dashboard
+      - key: JWT_SECRET
+        sync: false  # Will be set in the Render dashboard
+      - key: BETTER_AUTH_SECRET
+        sync: false  # Will be set in the Render dashboard
+      - key: PORT
+        fromService:
+          name: todo-backend
+          type: web
+          property: port
+    autoDeploy: true
+    healthCheckPath: /health

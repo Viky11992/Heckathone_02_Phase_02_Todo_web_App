@@ -68,7 +68,18 @@
       "Bash(curl -X POST \"http://127.0.0.1:8001/api/user-1767566220797/tasks\" -H \"Content-Type: application/json\" -H \"Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJ1c2VyLTE3Njc1NjYyMjA3OTciLCJuYW1lIjoiVXNlciB1c2VyLTE3Njc1NjYyMjA3OTciLCJlbWFpbCI6InVzZXItMTc2NzU2NjIyMDc5N0BleGFtcGxlLmNvbSIsImV4cCI6MTc3MDE2OTc0M30.QlURZz0V4RIyqHezc9uvRyAVsED-cNf-eDJeaHDiO4s\" -d \"{\"\"title\"\":\"\"Test from fixed API\"\",\"\"description\"\":\"\"This is a task created after fixing the API\"\",\"\"priority\"\":\"\"urgent\"\",\"\"category\"\":\"\"health\"\",\"\"due_date\"\":\"\"2026-06-15T09:00:00Z\"\"}\")",
       "Bash(curl -X GET \"http://127.0.0.1:8001/api/user-1767566220797/tasks?priority=urgent\" -H \"Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJ1c2VyLTE3Njc1NjYyMjA3OTciLCJuYW1lIjoiVXNlciB1c2VyLTE3Njc1NjYyMjA3OTciLCJlbWFpbCI6InVzZXItMTc2NzU2NjIyMDc5N0BleGFtcGxlLmNvbSIsImV4cCI6MTc3MDE2OTc0M30.QlURZz0V4RIyqHezc9uvRyAVsED-cNf-eDJeaHDiO4s\")",
       "Bash(python -c \"import sqlite3; conn = sqlite3.connect\\(''todo_app.db''\\); cursor = conn.cursor\\(\\); cursor.execute\\(''SELECT id, title, priority, category FROM task WHERE user_id=\"\"user-1767566220797\"\"''\\); print\\(''Tasks for user:''\\); [print\\(row\\) for row in cursor.fetchall\\(\\)]; conn.close\\(\\)\")",
-      "Bash(rm -f .next/dev/lock)"
+      "Bash(rm -f .next/dev/lock)",
+      "Bash(git add frontend/lib/api.ts frontend/lib/auth-service.ts)",
+      "Bash(git commit -m \"Fix API URL fallback for deployed backend\n- Update auth-service.ts and api.ts to use correct deployed backend URL\n- This fixes the ''Failed to fetch'' error on signup page\n- Use the Railway backend URL as fallback when environment variable is not available\")",
+      "Bash(git add frontend/lib/api.ts frontend/lib/auth-service.ts frontend/vercel.json)",
+      "Bash(git add backend/config.py)",
+      "Bash(git commit -m \"Fix backend URL and CORS settings for deployed app\n- Update auth-service.ts and api.ts to use correct Railway backend URL\n- Update vercel.json with correct backend URL\n- Update backend CORS settings to allow Vercel frontend\n- This fixes the ''Failed to fetch'' error on signup page\")",
+      "Bash(git push origin master)",
+      "Bash(find backend -name \"*.py\" -exec grep -l \"auth\\\\|token\" {} ;)",
+      "Bash(git commit -m \"Fix API URL for deployed backend - Remove /api suffix from base URL\n- Update auth-service.ts and api.ts to use correct base URL without /api suffix\n- Update vercel.json with correct backend URL without /api suffix\n- This fixes the 405 error on token generation by using the correct route structure\n- Backend expects routes at /api/auth/generate-token, so base URL should not include /api\")",
+      "Bash(find backend -name \"*.py\" -exec grep -l \"generate-token\\\\|/auth\" {} ;)",
+      "Bash(git commit -m \"Fix API URL for deployed backend - Add /api suffix back to base URL\n- Update auth-service.ts and api.ts to use correct base URL with /api suffix\n- Update vercel.json with correct backend URL with /api suffix\n- This fixes the 405 error on token generation by using the correct route structure\n- Backend expects routes at /api/auth/generate-token, so base URL should include /api\")",
+      "Bash(git add .)"
     ]
   }
 }

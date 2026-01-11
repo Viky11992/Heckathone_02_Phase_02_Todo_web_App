@@ -31,7 +31,8 @@ class Settings(BaseSettings):
         "https://todoapp.com",
         "https://www.todoapp.com",
         # Add Vercel deployment URLs
-        "https://heckathone-02-phase-02-todo-web-app.vercel.app/",
+        "https://heckathone-02-phase-02-todo-web-app.vercel.app",
+        "https://*.vercel.app",
         "https://*.railway.app"
     ]
 

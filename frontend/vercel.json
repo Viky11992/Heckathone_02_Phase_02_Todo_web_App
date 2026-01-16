@@ -2,6 +2,6 @@
   "version": 2,
   "framework": "nextjs",
   "env": {
-    "NEXT_PUBLIC_API_BASE_URL": "https://vickey92-todo-backend.hf.space/api"
+    "NEXT_PUBLIC_API_BASE_URL": "https://vickey92-todo-backend.hf.space"
   }
 }

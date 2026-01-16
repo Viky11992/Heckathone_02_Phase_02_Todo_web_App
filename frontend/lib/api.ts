@@ -2,7 +2,7 @@ import { TaskResponse, TaskCreate, TaskUpdate, TaskToggleComplete } from './type
 import { authService } from './auth-service';
 
 // Base API URL from environment or default
-const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL || 'https://vickey92-todo-backend.hf.space/api';
+const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL || 'https://vickey92-todo-backend.hf.space';
 
 // API client class to handle all API requests
 class ApiClient {

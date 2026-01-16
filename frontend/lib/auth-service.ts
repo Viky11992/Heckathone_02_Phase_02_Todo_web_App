@@ -1,7 +1,7 @@
 // Auth service to handle authentication with backend
 // This service will generate and validate tokens with the backend API
 
-const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL || 'https://vickey92-todo-backend.hf.space/api';
+const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL || 'https://vickey92-todo-backend.hf.space';
 
 class AuthService {
   // Generate a new JWT token from the backend

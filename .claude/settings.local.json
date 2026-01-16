@@ -91,7 +91,13 @@
       "Bash(curl -X GET https://vickey92-todo-backend.hf.space/api/auth/me)",
       "Bash(git commit -m \"$\\(cat <<''EOF''\nUpdate backend URL to Hugging Face deployment\n\n- Replace Railway backend URL with Hugging Face Space URL\n- Update API client configuration in api.ts\n- Update auth service configuration in auth-service.ts\n- Update Vercel environment configuration in vercel.json\n- All configurations now point to https://vickey92-todo-backend.hf.space/api\n\nCo-Authored-By: Claude Sonnet 4.5 <noreply@anthropic.com>\nEOF\n\\)\")",
       "Bash(curl -X POST https://vickey92-todo-backend.hf.space/api/auth/generate-token -H \"Content-Type: application/json\" -d '{\"\"user_id\"\": \"\"test-user\"\", \"\"email\"\": \"\"test@example.com\"\", \"\"name\"\": \"\"Test User\"\"}')",
-      "Bash(curl -X POST https://vickey92-todo-backend.hf.space/api/auth/validate-token -H \"Content-Type: application/json\" -d '{\"\"token\"\": \"\"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJ0ZXN0LXVzZXIiLCJuYW1lIjoiVGVzdCBVc2VyIiwiZW1haWwiOiJ0ZXN0QGV4YW1wbGUuY29tIiwiZXhwIjoxNzcxMTcxNTcwfQ.b5DT9F3EI2MYvps2GhPDpyIwT4wBfYO087fHj5BeUIU\"\"}')"
+      "Bash(curl -X POST https://vickey92-todo-backend.hf.space/api/auth/validate-token -H \"Content-Type: application/json\" -d '{\"\"token\"\": \"\"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJ0ZXN0LXVzZXIiLCJuYW1lIjoiVGVzdCBVc2VyIiwiZW1haWwiOiJ0ZXN0QGV4YW1wbGUuY29tIiwiZXhwIjoxNzcxMTcxNTcwfQ.b5DT9F3EI2MYvps2GhPDpyIwT4wBfYO087fHj5BeUIU\"\"}')",
+      "Bash(git commit -m \"$\\(cat <<''EOF''\nFix API URL configuration to resolve 405 error\n\n- Remove duplicate /api suffix from base URLs in frontend configuration\n- Backend already prefixes routes with /api, so base URL should not include it\n- Fixed endpoints: /api/auth/generate-token, /api/auth/validate-token\n- Token generation now works correctly without 405 error\n\nCo-Authored-By: Claude Sonnet 4.5 <noreply@anthropic.com>\nEOF\n\\)\")",
+      "Bash(curl -X OPTIONS https://vickey92-todo-backend.hf.space/api/auth/generate-token)",
+      "Bash(curl -X POST https://vickey92-todo-backend.hf.space/api/auth/generate-token -H \"Content-Type: application/json\" -H \"Accept: application/json\" -d '{\"\"user_id\"\": \"\"test-user\"\", \"\"email\"\": \"\"test@example.com\"\", \"\"name\"\": \"\"Test User\"\"}')",
+      "Bash(curl -X GET https://vickey92-todo-backend.hf.space/openapi.json)",
+      "Bash(curl -X POST https://vickey92-todo-backend.hf.space/auth/generate-token -H \"Content-Type: application/json\" -d '{\"\"user_id\"\": \"\"test\"\", \"\"email\"\": \"\"test@example.com\"\", \"\"name\"\": \"\"Test\"\"}')",
+      "Bash(curl -X POST https://vickey92-todo-backend.hf.space/api/auth/generate-token -H \"Content-Type: application/json\" -d '{\"\"user_id\"\": \"\"test\"\", \"\"email\"\": \"\"test@example.com\"\", \"\"name\"\": \"\"Test\"\"}')"
     ]
   }
 }

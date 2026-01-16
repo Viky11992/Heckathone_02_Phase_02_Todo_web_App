@@ -4,4 +4,4 @@
 alembic upgrade head
 
 # Start the application
-exec uvicorn main:app --host 0.0.0.0 --port ${PORT:-8000} --workers 4
+exec uvicorn main:app --host 0.0.0.0 --port ${PORT:-7860} --workers 2

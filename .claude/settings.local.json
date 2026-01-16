@@ -79,7 +79,16 @@
       "Bash(git commit -m \"Fix API URL for deployed backend - Remove /api suffix from base URL\n- Update auth-service.ts and api.ts to use correct base URL without /api suffix\n- Update vercel.json with correct backend URL without /api suffix\n- This fixes the 405 error on token generation by using the correct route structure\n- Backend expects routes at /api/auth/generate-token, so base URL should not include /api\")",
       "Bash(find backend -name \"*.py\" -exec grep -l \"generate-token\\\\|/auth\" {} ;)",
       "Bash(git commit -m \"Fix API URL for deployed backend - Add /api suffix back to base URL\n- Update auth-service.ts and api.ts to use correct base URL with /api suffix\n- Update vercel.json with correct backend URL with /api suffix\n- This fixes the 405 error on token generation by using the correct route structure\n- Backend expects routes at /api/auth/generate-token, so base URL should include /api\")",
-      "Bash(git add .)"
+      "Bash(git add .)",
+      "Bash(git add frontend/lib/auth-service.ts frontend/lib/api.ts frontend/.env.local)",
+      "Bash(git add frontend/lib/auth-service.ts frontend/lib/api.ts)",
+      "Bash(git add --force frontend/lib/auth-service.ts frontend/lib/api.ts)",
+      "Bash(git commit -m \"Fix CORS settings and add Render deployment configuration\n\n- Update backend CORS settings to allow requests from Vercel deployments\n- Add render.yaml for backend deployment configuration\n- Clean up Claude settings file from development commands\n- Ensure frontend can communicate with backend API successfully\")",
+      "Bash(dir *.json *.md *.yml *.yaml *.sh Dockerfile package*.json)",
+      "Bash(curl -I https://vickey92-todo-backend.hf.space/health)",
+      "Bash(curl -X GET https://vickey92-todo-backend.hf.space/health)",
+      "Bash(curl -X GET https://vickey92-todo-backend.hf.space/docs)",
+      "Bash(curl -X GET https://vickey92-todo-backend.hf.space/api/auth/me)"
     ]
   }
 }

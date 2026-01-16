@@ -18,7 +18,7 @@ COPY . .
 # Make start script executable
 RUN chmod +x /app/start.sh
 
-# Expose port (will be set by Railway)
+# Expose port (will be set by Hugging Face)
 EXPOSE $PORT
 
 # Run the start script which handles migrations and starts the app

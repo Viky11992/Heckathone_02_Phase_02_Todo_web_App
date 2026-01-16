@@ -105,10 +105,10 @@ npm run dev
 
 ### Production Deployment
 
-The application is designed to be deployed with the frontend on Vercel and the backend on Railway:
+The application is designed to be deployed with the frontend on Vercel and the backend on Hugging Face Spaces:
 
 - **Frontend**: Deployed on [Vercel](https://vercel.com)
-- **Backend**: Deployed on [Railway](https://railway.app)
+- **Backend**: Deployed on [Hugging Face Spaces](https://huggingface.co/spaces)
 
 For production deployment instructions, see [DEPLOYMENT.md](DEPLOYMENT.md).
 

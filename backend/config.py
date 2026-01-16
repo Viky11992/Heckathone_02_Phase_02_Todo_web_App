@@ -33,7 +33,9 @@ class Settings(BaseSettings):
         # Add Vercel deployment URLs
         "https://heckathone-02-phase-02-todo-web-app.vercel.app",
         "https://*.vercel.app",
-        "https://*.railway.app"
+        # Add Hugging Face Space URL pattern
+        "https://*.hf.space",
+        "https://*.huggingface.app"
     ]
 
     # Better Auth settings

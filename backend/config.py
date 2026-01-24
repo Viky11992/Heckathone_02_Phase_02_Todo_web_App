@@ -28,12 +28,8 @@ class Settings(BaseSettings):
     # CORS settings
     cors_origins: List[str] = [
         "http://localhost:3000",
-        "http://localhost:3001",
         "http://127.0.0.1:3000",
-        "http://127.0.0.1:3001",
-        "http://localhost:8000",
-        "https://todoapp.com",
-        "https://www.todoapp.com",
+
         # Add Vercel deployment URLs
         "https://heckathone-02-phase-02-todo-web-app.vercel.app",
         "https://*.vercel.app",

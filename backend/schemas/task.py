@@ -31,7 +31,7 @@ class TaskCreate(TaskBase):
     due_date: Optional[datetime] = None
 
     class Config:
-        schema_extra = {
+        json_schema_extra = {
             "example": {
                 "title": "Buy groceries",
                 "description": "Need to buy milk, bread, and eggs",
@@ -53,7 +53,7 @@ class TaskUpdate(BaseModel):
     due_date: Optional[datetime] = None
 
     class Config:
-        schema_extra = {
+        json_schema_extra = {
             "example": {
                 "title": "Updated task title",
                 "description": "Updated task description",
@@ -71,7 +71,7 @@ class TaskToggleComplete(BaseModel):
     completed: bool
 
     class Config:
-        schema_extra = {
+        json_schema_extra = {
             "example": {
                 "completed": True
             }

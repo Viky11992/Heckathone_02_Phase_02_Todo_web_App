@@ -24,9 +24,12 @@ export default function TaskForm({ userId, onSuccess, onCancel, task }: TaskForm
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
     const { name, value } = e.target;
+    // For date fields, if the value is empty, set it to undefined instead of empty string
+    const processedValue = name === 'due_date' && value === '' ? undefined : value;
+
     setFormData(prev => ({
       ...prev,
-      [name]: value
+      [name]: processedValue
     }));
   };
 

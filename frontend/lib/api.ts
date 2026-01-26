@@ -28,7 +28,11 @@ class ApiClient {
   }
 
   // Convert date string to datetime format for API
-  private formatDateToDateTime(dateString: string): string {
+  private formatDateToDateTime(dateString: string | null | undefined): string | null {
+    if (!dateString) {
+      return null;
+    }
+
     // If dateString is already in ISO datetime format, return as is
     if (dateString.includes('T')) {
       return dateString;
@@ -182,7 +186,7 @@ class ApiClient {
     // Prepare task data by converting date string to datetime format if needed
     const preparedData = {
       ...taskData,
-      due_date: taskData.due_date ? this.formatDateToDateTime(taskData.due_date) : undefined
+      due_date: this.formatDateToDateTime(taskData.due_date) || undefined
     };
 
     return this.makeRequest(`/${userId}/tasks`, {
@@ -199,7 +203,7 @@ class ApiClient {
     // Prepare task data by converting date string to datetime format if needed
     const preparedData = {
       ...taskData,
-      due_date: taskData.due_date ? this.formatDateToDateTime(taskData.due_date) : undefined
+      due_date: this.formatDateToDateTime(taskData.due_date) || undefined
     };
 
     return this.makeRequest(`/${userId}/tasks/${taskId}`, {

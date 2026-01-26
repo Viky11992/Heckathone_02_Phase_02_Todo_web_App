@@ -11,7 +11,7 @@ export interface Task {
   completed: boolean;
   priority: TaskPriority;
   category: TaskCategory;
-  due_date?: string; // ISO date string
+  due_date?: string | null; // ISO date string
   created_at: string; // ISO date string
   updated_at: string; // ISO date string
 }
@@ -21,7 +21,7 @@ export interface TaskCreate {
   description?: string;
   priority?: TaskPriority;
   category?: TaskCategory;
-  due_date?: string; // ISO date string
+  due_date?: string | null; // ISO date string
 }
 
 export interface TaskUpdate {
@@ -29,7 +29,7 @@ export interface TaskUpdate {
   description?: string;
   priority?: TaskPriority;
   category?: TaskCategory;
-  due_date?: string; // ISO date string
+  due_date?: string | null; // ISO date string
 }
 
 export interface TaskToggleComplete {

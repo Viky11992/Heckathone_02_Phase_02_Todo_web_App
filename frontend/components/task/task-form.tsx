@@ -17,7 +17,7 @@ export default function TaskForm({ userId, onSuccess, onCancel, task }: TaskForm
     description: task?.description || '',
     priority: task?.priority || 'medium',
     category: task?.category || 'other',
-    due_date: task?.due_date || '',
+    due_date: task?.due_date || undefined,
   });
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);

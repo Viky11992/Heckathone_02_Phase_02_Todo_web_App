@@ -168,9 +168,15 @@ class ApiClient {
   }
 
   async createTask(userId: string, taskData: TaskCreate) {
+    // Prepare task data by converting empty due_date to undefined/null
+    const preparedData = {
+      ...taskData,
+      due_date: taskData.due_date || undefined
+    };
+
     return this.makeRequest(`/${userId}/tasks`, {
       method: 'POST',
-      body: JSON.stringify(taskData),
+      body: JSON.stringify(preparedData),
     });
   }
 
@@ -179,9 +185,15 @@ class ApiClient {
   }
 
   async updateTask(userId: string, taskId: number, taskData: TaskUpdate) {
+    // Prepare task data by converting empty due_date to undefined/null
+    const preparedData = {
+      ...taskData,
+      due_date: taskData.due_date || undefined
+    };
+
     return this.makeRequest(`/${userId}/tasks/${taskId}`, {
       method: 'PUT',
-      body: JSON.stringify(taskData),
+      body: JSON.stringify(preparedData),
     });
   }
 

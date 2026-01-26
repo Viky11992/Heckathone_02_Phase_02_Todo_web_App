@@ -27,6 +27,17 @@ class ApiClient {
     return authService.getAuthToken();
   }
 
+  // Convert date string to datetime format for API
+  private formatDateToDateTime(dateString: string): string {
+    // If dateString is already in ISO datetime format, return as is
+    if (dateString.includes('T')) {
+      return dateString;
+    }
+
+    // Convert date string (YYYY-MM-DD) to datetime (YYYY-MM-DDT00:00:00)
+    return `${dateString}T00:00:00`;
+  }
+
   // Include token in request
   private async makeRequest(endpoint: string, options: RequestInit = {}) {
     let token = await this.getJwtToken();
@@ -168,10 +179,10 @@ class ApiClient {
   }
 
   async createTask(userId: string, taskData: TaskCreate) {
-    // Prepare task data by converting empty due_date to undefined/null
+    // Prepare task data by converting date string to datetime format if needed
     const preparedData = {
       ...taskData,
-      due_date: taskData.due_date || undefined
+      due_date: taskData.due_date ? this.formatDateToDateTime(taskData.due_date) : undefined
     };
 
     return this.makeRequest(`/${userId}/tasks`, {
@@ -185,10 +196,10 @@ class ApiClient {
   }
 
   async updateTask(userId: string, taskId: number, taskData: TaskUpdate) {
-    // Prepare task data by converting empty due_date to undefined/null
+    // Prepare task data by converting date string to datetime format if needed
     const preparedData = {
       ...taskData,
-      due_date: taskData.due_date || undefined
+      due_date: taskData.due_date ? this.formatDateToDateTime(taskData.due_date) : undefined
     };
 
     return this.makeRequest(`/${userId}/tasks/${taskId}`, {

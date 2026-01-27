@@ -31,14 +31,32 @@ class TaskBase(BaseModel):
             # If it's a date-only string like "2023-12-31", convert to datetime
             if len(value) == 10 and '-' in value:  # YYYY-MM-DD format
                 try:
-                    return datetime.strptime(value, '%Y-%m-%d')
+                    # Convert date-only string to datetime (at midnight)
+                    parsed_date = datetime.strptime(value, '%Y-%m-%d')
+                    return parsed_date
                 except ValueError:
                     pass  # Fall through to try datetime parsing
             # Try to parse as datetime
             try:
-                return datetime.fromisoformat(value.replace('Z', '+00:00'))
+                # Handle various datetime formats including with/without timezone
+                value_cleaned = value.replace('Z', '+00:00')
+                if value_cleaned.count(':') == 1:  # HH:MM format without seconds
+                    value_cleaned += ':00'
+
+                # Handle timezone formats properly
+                if '+' in value_cleaned and value_cleaned.count('+') == 1:
+                    parts = value_cleaned.split('+')
+                    dt_part = parts[0]
+                    tz_part = parts[1]
+                    if len(tz_part) == 2:
+                        value_cleaned = f"{dt_part}+{tz_part}:00"
+
+                return datetime.fromisoformat(value_cleaned.replace('Z', '+00:00'))
             except ValueError:
                 pass
+        elif isinstance(value, date) and not isinstance(value, datetime):
+            # If it's a date but not datetime, convert to datetime at midnight
+            return datetime.combine(value, datetime.min.time())
         return value
 
 
@@ -81,7 +99,7 @@ class TaskUpdate(TaskBase):
                 "description": "Updated task description",
                 "priority": "high",
                 "category": "work",
-                "due_date": "2023-12-31T10:00:00Z"
+                "due_date": "2023-12-31"
             }
         }
 

@@ -64,7 +64,7 @@ class TaskCreate(TaskBase):
         }
 
 
-class TaskUpdate(BaseModel):
+class TaskUpdate(TaskBase):
     """
     Schema for updating an existing task
     """
@@ -72,29 +72,7 @@ class TaskUpdate(BaseModel):
     description: Optional[str] = None
     priority: Optional[str] = None
     category: Optional[str] = None
-    due_date: Optional[datetime] = None
-
-    @field_validator('due_date', mode='before')
-    @classmethod
-    def validate_due_date(cls, value):
-        if value == "" or value is None:
-            return None
-        if isinstance(value, str):
-            # Handle string datetime formats
-            if value.strip() == "":
-                return None
-            # If it's a date-only string like "2023-12-31", convert to datetime
-            if len(value) == 10 and '-' in value:  # YYYY-MM-DD format
-                try:
-                    return datetime.strptime(value, '%Y-%m-%d')
-                except ValueError:
-                    pass  # Fall through to try datetime parsing
-            # Try to parse as datetime
-            try:
-                return datetime.fromisoformat(value.replace('Z', '+00:00'))
-            except ValueError:
-                pass
-        return value
+    # due_date inherited from TaskBase with its validator
 
     class Config:
         json_schema_extra = {

@@ -142,6 +142,20 @@ class ApiClient {
 
               if (!retryResponse.ok) {
                 const retryErrorData = await retryResponse.json().catch(() => ({}));
+
+                // Handle validation errors (422) with more specific information
+                if (retryResponse.status === 422 && retryErrorData.detail) {
+                  // Format validation errors for better readability
+                  let validationErrors = '';
+                  if (Array.isArray(retryErrorData.detail)) {
+                    validationErrors = retryErrorData.detail.map((err: any) =>
+                      `${err.loc?.join('.')}: ${err.msg} (${err.type})`
+                    ).join('; ');
+                  }
+
+                  throw new Error(`Validation Error: ${validationErrors || 'Invalid input data'} (Status: ${retryResponse.status})`);
+                }
+
                 throw new Error(retryErrorData.error?.message || `API request failed: ${retryResponse.status}`);
               }
 
@@ -155,11 +169,39 @@ class ApiClient {
 
       // If retry failed, throw the original error
       const errorData = await response.json().catch(() => ({}));
+
+      // Handle validation errors (422) with more specific information
+      if (response.status === 422 && errorData.detail) {
+        // Format validation errors for better readability
+        let validationErrors = '';
+        if (Array.isArray(errorData.detail)) {
+          validationErrors = errorData.detail.map((err: any) =>
+            `${err.loc?.join('.')}: ${err.msg} (${err.type})`
+          ).join('; ');
+        }
+
+        throw new Error(`Validation Error: ${validationErrors || 'Invalid input data'} (Status: ${response.status})`);
+      }
+
       throw new Error(errorData.error?.message || `API request failed: ${response.status}`);
     }
 
     if (!response.ok) {
       const errorData = await response.json().catch(() => ({}));
+
+      // Handle validation errors (422) with more specific information
+      if (response.status === 422 && errorData.detail) {
+        // Format validation errors for better readability
+        let validationErrors = '';
+        if (Array.isArray(errorData.detail)) {
+          validationErrors = errorData.detail.map((err: any) =>
+            `${err.loc?.join('.')}: ${err.msg} (${err.type})`
+          ).join('; ');
+        }
+
+        throw new Error(`Validation Error: ${validationErrors || 'Invalid input data'} (Status: ${response.status})`);
+      }
+
       throw new Error(errorData.error?.message || `API request failed: ${response.status}`);
     }
 

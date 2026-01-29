@@ -183,7 +183,9 @@
       "Bash(git commit -m \"$\\(cat <<''EOF''\nConfigure environment variables for database and API connections\n\n- Updated DATABASE_URL to remove incorrect ''psql'' prefix\n- Added JWT_SECRET for secure token signing\n- Added BETTER_AUTH_SECRET for authentication\n- Set NEXT_PUBLIC_API_BASE_URL with correct ''/api'' path\n\nCo-Authored-By: Claude Sonnet 4.5 <noreply@anthropic.com>\nEOF\n\\)\")",
       "Bash(git pull origin master)",
       "Bash(python \"D:\\\\heckathone_02\\\\phase_02\\\\backend\\\\create_tables.py\")",
-      "Bash(python \"D:\\\\heckathone_02\\\\phase_02\\\\backend\\\\migrate_users.py\")"
+      "Bash(python \"D:\\\\heckathone_02\\\\phase_02\\\\backend\\\\migrate_users.py\")",
+      "Bash(git commit -m \"$\\(cat <<''EOF''\nAdd user management functionality and fix user-task relationship\n\n- Added User model with proper database schema\n- Implemented user creation via auth/generate-token endpoint\n- Created dedicated users CRUD endpoints\n- Established proper foreign key relationship between tasks and users\n- Updated database initialization to include User model\n- Added comprehensive tests for user and task management\n\nCo-Authored-By: Claude Sonnet 4.5 <noreply@anthropic.com>\nEOF\n\\)\")",
+      "Bash(python \"D:\\\\heckathone_02\\\\phase_02\\\\backend\\\\migrate_add_password_column.py\")"
     ]
   }
 }

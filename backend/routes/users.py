@@ -15,6 +15,13 @@ class UserCreate(BaseModel):
     id: str
     email: str
     name: str = None
+    password: str  # Password is required for user creation
+
+
+class UserUpdate(BaseModel):
+    email: str = None
+    name: str = None
+    password: str = None  # Optional password update
 
 
 class UserResponse(BaseModel):
@@ -115,11 +122,23 @@ async def create_user(
             detail="User already exists"
         )
 
+    # Check if email already exists
+    existing_email_user = session.query(models.User).filter(models.User.email == user_data.email).first()
+    if existing_email_user:
+        raise HTTPException(
+            status_code=status.HTTP_409_CONFLICT,
+            detail="User with this email already exists"
+        )
+
+    # Hash the password
+    hashed_password = models.User.hash_password(user_data.password)
+
     # Create new user
     user = models.User(
         id=user_data.id,
         email=user_data.email,
         name=user_data.name,
+        hashed_password=hashed_password,
         created_at=datetime.utcnow(),
         updated_at=datetime.utcnow()
     )
@@ -143,7 +162,7 @@ async def create_user(
 @router.put("/users/{user_id}", response_model=UserResponseWrapper)
 async def update_user(
     user_id: str,
-    user_data: UserCreate,
+    user_data: UserUpdate,
     session: Session = Depends(get_session),
     current_user_id: str = Depends(get_current_user_id)
 ):
@@ -161,9 +180,15 @@ async def update_user(
             detail="User not found"
         )
 
-    # Update user fields
-    user.email = user_data.email
-    user.name = user_data.name
+    # Update user fields if provided
+    if user_data.email is not None:
+        user.email = user_data.email
+    if user_data.name is not None:
+        user.name = user_data.name
+    if user_data.password is not None:
+        # Hash the new password
+        user.hashed_password = models.User.hash_password(user_data.password)
+
     user.updated_at = datetime.utcnow()
 
     session.add(user)

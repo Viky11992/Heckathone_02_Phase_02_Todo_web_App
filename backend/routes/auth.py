@@ -8,6 +8,7 @@ from config import settings
 from sqlmodel import Session
 from database import get_session
 import models
+from pydantic import BaseModel
 
 
 router = APIRouter()
@@ -36,11 +37,130 @@ async def get_current_user(
     )
 
 
+class UserLogin(BaseModel):
+    email: str
+    password: str
+
+
+class UserRegister(BaseModel):
+    id: str
+    email: str
+    name: str
+    password: str
+
+
+@router.post("/auth/register")
+async def register_user(user_data: UserRegister, session: Session = Depends(get_session)):
+    """
+    Register a new user with email and password
+    """
+    try:
+        # Check if user already exists
+        existing_user = session.query(models.User).filter(models.User.email == user_data.email).first()
+        if existing_user:
+            raise HTTPException(
+                status_code=status.HTTP_409_CONFLICT,
+                detail="User with this email already exists"
+            )
+
+        # Hash the password
+        hashed_password = models.User.hash_password(user_data.password)
+
+        # Create new user
+        new_user = models.User(
+            id=user_data.id,
+            email=user_data.email,
+            name=user_data.name,
+            hashed_password=hashed_password,
+            created_at=datetime.utcnow(),
+            updated_at=datetime.utcnow()
+        )
+
+        session.add(new_user)
+        session.commit()
+        session.refresh(new_user)
+
+        # Create JWT payload
+        payload = {
+            "sub": new_user.id,
+            "name": new_user.name,
+            "email": new_user.email,
+            "exp": datetime.utcnow() + timedelta(days=30)  # Token expires in 30 days
+        }
+
+        # Generate the token using the same secret and algorithm as the backend
+        token = jwt.encode(payload, settings.jwt_secret, algorithm=settings.jwt_algorithm)
+
+        return {
+            "success": True,
+            "token": token,
+            "user_id": new_user.id,
+            "expires_in": 30 * 24 * 60 * 60  # 30 days in seconds
+        }
+    except HTTPException:
+        raise
+    except Exception as e:
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail=f"Error registering user: {str(e)}"
+        )
+
+
+@router.post("/auth/login")
+async def login_user(login_data: UserLogin, session: Session = Depends(get_session)):
+    """
+    Login a user with email and password
+    """
+    try:
+        # Find user by email
+        user = session.query(models.User).filter(models.User.email == login_data.email).first()
+
+        if not user:
+            raise HTTPException(
+                status_code=status.HTTP_401_UNAUTHORIZED,
+                detail="Incorrect email or password"
+            )
+
+        # Verify password
+        if not user.verify_password(login_data.password):
+            raise HTTPException(
+                status_code=status.HTTP_401_UNAUTHORIZED,
+                detail="Incorrect email or password"
+            )
+
+        # Create JWT payload
+        payload = {
+            "sub": user.id,
+            "name": user.name,
+            "email": user.email,
+            "exp": datetime.utcnow() + timedelta(days=30)  # Token expires in 30 days
+        }
+
+        # Generate the token using the same secret and algorithm as the backend
+        token = jwt.encode(payload, settings.jwt_secret, algorithm=settings.jwt_algorithm)
+
+        return {
+            "success": True,
+            "token": token,
+            "user_id": user.id,
+            "expires_in": 30 * 24 * 60 * 60  # 30 days in seconds
+        }
+    except HTTPException:
+        raise
+    except Exception as e:
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail=f"Error logging in: {str(e)}"
+        )
+
+
 @router.post("/auth/generate-token")
 async def generate_token(request: Request, session: Session = Depends(get_session)):
     """
     Generate a JWT token for a user (for frontend authentication)
     This endpoint allows the frontend to get a proper JWT token
+    NOTE: This endpoint is now for backward compatibility only.
+    For security, use /auth/register or /auth/login instead.
     """
     try:
         # Get user data from request body
@@ -48,15 +168,19 @@ async def generate_token(request: Request, session: Session = Depends(get_sessio
         user_id = body.get('user_id', 'default-user')
         email = body.get('email', f'{user_id}@example.com')
         name = body.get('name', f'User {user_id}')
+        password = body.get('password')  # Optional password for enhanced security
 
-        # Check if user exists, create if not
+        # Check if user exists
         existing_user = session.get(models.User, user_id)
         if not existing_user:
-            # Create new user
+            # Create new user with a default password if none provided
+            hashed_password = models.User.hash_password(password if password else "default_temp_password")
+
             new_user = models.User(
                 id=user_id,
                 email=email,
                 name=name,
+                hashed_password=hashed_password,
                 created_at=datetime.utcnow(),
                 updated_at=datetime.utcnow()
             )

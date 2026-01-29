@@ -3,11 +3,16 @@ from typing import Optional
 from datetime import datetime
 import os
 from enum import Enum
+from passlib.context import CryptContext
 
 
 class TaskStatus(str, Enum):
     PENDING = "pending"
     COMPLETED = "completed"
+
+
+# Password hashing context
+pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
 
 
 class User(SQLModel, table=True):
@@ -17,8 +22,18 @@ class User(SQLModel, table=True):
     id: Optional[str] = Field(default=None, primary_key=True)  # Using string ID to match Better Auth pattern
     email: str = Field(unique=True, nullable=False, index=True)
     name: Optional[str] = Field(default=None, max_length=100)
+    hashed_password: str = Field(nullable=False)  # Add hashed password field
     created_at: datetime = Field(default_factory=datetime.utcnow, nullable=False)
     updated_at: datetime = Field(default_factory=datetime.utcnow, nullable=False)
+
+    def verify_password(self, plain_password: str) -> bool:
+        """Verify a plain password against the hashed password."""
+        return pwd_context.verify(plain_password, self.hashed_password)
+
+    @staticmethod
+    def hash_password(plain_password: str) -> str:
+        """Hash a plain password."""
+        return pwd_context.hash(plain_password)
 
 
 class Task(SQLModel, table=True):

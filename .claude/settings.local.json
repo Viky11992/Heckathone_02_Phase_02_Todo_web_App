@@ -179,7 +179,11 @@
       "Bash(python test_task_operations.py)",
       "Bash(python test_local_db.py)",
       "Bash(dir D:heckathone_02phase_02frontend)",
-      "Bash(dir \"D:\\\\heckathone_02\\\\phase_02\\\\frontend\")"
+      "Bash(dir \"D:\\\\heckathone_02\\\\phase_02\\\\frontend\")",
+      "Bash(git commit -m \"$\\(cat <<''EOF''\nConfigure environment variables for database and API connections\n\n- Updated DATABASE_URL to remove incorrect ''psql'' prefix\n- Added JWT_SECRET for secure token signing\n- Added BETTER_AUTH_SECRET for authentication\n- Set NEXT_PUBLIC_API_BASE_URL with correct ''/api'' path\n\nCo-Authored-By: Claude Sonnet 4.5 <noreply@anthropic.com>\nEOF\n\\)\")",
+      "Bash(git pull origin master)",
+      "Bash(python \"D:\\\\heckathone_02\\\\phase_02\\\\backend\\\\create_tables.py\")",
+      "Bash(python \"D:\\\\heckathone_02\\\\phase_02\\\\backend\\\\migrate_users.py\")"
     ]
   }
 }

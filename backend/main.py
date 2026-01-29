@@ -4,7 +4,7 @@ from contextlib import asynccontextmanager
 from database import engine
 import models
 from config import settings
-from routes import tasks, auth
+from routes import tasks, auth, users
 from sqlmodel import SQLModel
 import logging
 
@@ -44,6 +44,7 @@ app.add_middleware(
 # Include API routes
 app.include_router(tasks.router, prefix="/api", tags=["tasks"])
 app.include_router(auth.router, prefix="/api", tags=["auth"])
+app.include_router(users.router, prefix="/api", tags=["users"])
 
 # Health check endpoint
 @app.get("/health")

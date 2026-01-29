@@ -5,6 +5,9 @@ from typing import Optional
 from datetime import datetime, timedelta
 from jose import jwt
 from config import settings
+from sqlmodel import Session
+from database import get_session
+import models
 
 
 router = APIRouter()
@@ -34,7 +37,7 @@ async def get_current_user(
 
 
 @router.post("/auth/generate-token")
-async def generate_token(request: Request):
+async def generate_token(request: Request, session: Session = Depends(get_session)):
     """
     Generate a JWT token for a user (for frontend authentication)
     This endpoint allows the frontend to get a proper JWT token
@@ -45,6 +48,28 @@ async def generate_token(request: Request):
         user_id = body.get('user_id', 'default-user')
         email = body.get('email', f'{user_id}@example.com')
         name = body.get('name', f'User {user_id}')
+
+        # Check if user exists, create if not
+        existing_user = session.get(models.User, user_id)
+        if not existing_user:
+            # Create new user
+            new_user = models.User(
+                id=user_id,
+                email=email,
+                name=name,
+                created_at=datetime.utcnow(),
+                updated_at=datetime.utcnow()
+            )
+            session.add(new_user)
+            session.commit()
+            session.refresh(new_user)
+        else:
+            # Update user info if it has changed
+            existing_user.email = email
+            existing_user.name = name
+            existing_user.updated_at = datetime.utcnow()
+            session.add(existing_user)
+            session.commit()
 
         # Create JWT payload
         payload = {

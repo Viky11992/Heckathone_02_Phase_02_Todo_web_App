@@ -12,7 +12,7 @@ class Settings(BaseSettings):
     Application settings using Pydantic Settings
     """
     # Database settings
-    database_url: str = os.getenv("DATABASE_URL", "sqlite:///./todo_app.db")
+    database_url: str = os.getenv("DATABASE_URL", "sqlite:///./todo_app_local.db")
     db_echo: bool = os.getenv("DB_ECHO", "False").lower() == "true"
 
     # API settings

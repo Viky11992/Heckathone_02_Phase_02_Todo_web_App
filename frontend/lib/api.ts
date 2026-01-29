@@ -171,7 +171,7 @@ class ApiClient {
       const errorData = await response.json().catch(() => ({}));
 
       // Handle validation errors (422) with more specific information
-      if (response.status === 422 && errorData.detail) {
+      if ((response.status as number) === 422 && errorData.detail) {
         // Format validation errors for better readability
         let validationErrors = '';
         if (Array.isArray(errorData.detail)) {

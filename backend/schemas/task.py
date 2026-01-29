@@ -54,7 +54,7 @@ class TaskBase(BaseModel):
                 return datetime.fromisoformat(value_cleaned.replace('Z', '+00:00'))
             except ValueError:
                 pass
-        elif isinstance(value, date) and not isinstance(value, datetime):
+        elif isinstance(value, date) and type(value) is date:
             # If it's a date but not datetime, convert to datetime at midnight
             return datetime.combine(value, datetime.min.time())
         return value

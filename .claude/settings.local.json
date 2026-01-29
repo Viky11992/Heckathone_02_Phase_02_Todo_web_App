@@ -185,7 +185,8 @@
       "Bash(python \"D:\\\\heckathone_02\\\\phase_02\\\\backend\\\\create_tables.py\")",
       "Bash(python \"D:\\\\heckathone_02\\\\phase_02\\\\backend\\\\migrate_users.py\")",
       "Bash(git commit -m \"$\\(cat <<''EOF''\nAdd user management functionality and fix user-task relationship\n\n- Added User model with proper database schema\n- Implemented user creation via auth/generate-token endpoint\n- Created dedicated users CRUD endpoints\n- Established proper foreign key relationship between tasks and users\n- Updated database initialization to include User model\n- Added comprehensive tests for user and task management\n\nCo-Authored-By: Claude Sonnet 4.5 <noreply@anthropic.com>\nEOF\n\\)\")",
-      "Bash(python \"D:\\\\heckathone_02\\\\phase_02\\\\backend\\\\migrate_add_password_column.py\")"
+      "Bash(python \"D:\\\\heckathone_02\\\\phase_02\\\\backend\\\\migrate_add_password_column.py\")",
+      "Bash(git commit -m \"$\\(cat <<''EOF''\nFix critical authentication security vulnerability\n\n- Added proper password hashing using bcrypt with pwd_context\n- Implemented secure user registration with password requirement\n- Added secure login endpoint with password verification\n- Enhanced user model with hashed_password field\n- Updated all user management endpoints to handle passwords securely\n- Maintained backward compatibility with generate-token endpoint\n- Added comprehensive security tests\n\nSecurity improvements:\n- No longer possible to access accounts with just email\n- Now using pwd_context.verify\\(password, hashed_password\\) for secure password verification\n- Passwords are properly hashed before storing in database\n- Login attempts are properly validated against hashed passwords\n\nCo-Authored-By: Claude Sonnet 4.5 <noreply@anthropic.com>\nEOF\n\\)\")"
     ]
   }
 }

@@ -12,7 +12,7 @@ class TaskStatus(str, Enum):
 
 
 # Password hashing context
-pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
+pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto", bcrypt__ident="2b", bcrypt__rounds=12)
 
 
 class User(SQLModel, table=True):
@@ -33,7 +33,9 @@ class User(SQLModel, table=True):
     @staticmethod
     def hash_password(plain_password: str) -> str:
         """Hash a plain password."""
-        return pwd_context.hash(plain_password)
+        # Truncate password to 72 bytes to comply with bcrypt limitations
+        truncated_password = plain_password[:72] if len(plain_password) > 72 else plain_password
+        return pwd_context.hash(truncated_password)
 
 
 class Task(SQLModel, table=True):

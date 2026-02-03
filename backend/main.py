@@ -16,7 +16,7 @@ async def lifespan(app: FastAPI):
     """
     # Initialize the database
     logging.info("Creating database tables...")
-    SQLModel.metadata.create_all(bind=engine)
+    # SQLModel.metadata.create_all(bind=engine)
     logging.info("Database tables created successfully")
     yield
     # Shutdown logic here if needed
@@ -45,6 +45,11 @@ app.add_middleware(
 app.include_router(tasks.router, prefix="/api", tags=["tasks"])
 app.include_router(auth.router, prefix="/api", tags=["auth"])
 app.include_router(users.router, prefix="/api", tags=["users"])
+
+# Root endpoint
+@app.get("/")
+async def root():
+    return {"message": "Welcome to the Todo API", "status": "running"}
 
 # Health check endpoint
 @app.get("/health")

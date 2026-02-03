@@ -1,3 +1,4 @@
+import uuid
 from fastapi import APIRouter, HTTPException, status, Depends, Request
 from schemas import task as task_schemas
 from middleware.auth import JWTBearer
@@ -43,7 +44,7 @@ class UserLogin(BaseModel):
 
 
 class UserRegister(BaseModel):
-    id: str
+    id: Optional[str] = None  # Make ID optional to allow auto-generation
     email: str
     name: str
     password: str
@@ -63,12 +64,19 @@ async def register_user(user_data: UserRegister, session: Session = Depends(get_
                 detail="User with this email already exists"
             )
 
+        # Generate ID if not provided
+        user_id = user_data.id
+        if not user_id or user_id.strip() == "":
+            # Generate a unique ID (using email as base, but in production you'd want a proper UUID)
+            import uuid
+            user_id = str(uuid.uuid4())
+
         # Hash the password
         hashed_password = models.User.hash_password(user_data.password)
 
         # Create new user
         new_user = models.User(
-            id=user_data.id,
+            id=user_id,
             email=user_data.email,
             name=user_data.name,
             hashed_password=hashed_password,
@@ -164,11 +172,27 @@ async def generate_token(request: Request, session: Session = Depends(get_sessio
     """
     try:
         # Get user data from request body
-        body = await request.json()
-        user_id = body.get('user_id', 'default-user')
-        email = body.get('email', f'{user_id}@example.com')
-        name = body.get('name', f'User {user_id}')
-        password = body.get('password')  # Optional password for enhanced security
+        try:
+            body = await request.json()
+        except Exception:
+            # If JSON parsing fails, return a more informative error
+            raise HTTPException(
+                status_code=status.HTTP_400_BAD_REQUEST,
+                detail="Request body must be valid JSON"
+            )
+
+        # Extract user data with proper defaults
+        user_id = body.get('user_id') or body.get('id', 'default-user')
+        email = body.get('email', f'{user_id}@example.com' if user_id != 'default-user' else 'default@example.com')
+        name = body.get('name', f'User {user_id}' if user_id != 'default-user' else 'Default User')
+        password = body.get('password') or body.get('plain_password')  # Support different password field names
+
+        # Validate required fields
+        if not user_id or user_id.strip() == '':
+            raise HTTPException(
+                status_code=status.HTTP_400_BAD_REQUEST,
+                detail="user_id is required"
+            )
 
         # Check if user exists
         existing_user = session.get(models.User, user_id)
@@ -212,7 +236,15 @@ async def generate_token(request: Request, session: Session = Depends(get_sessio
             "user_id": user_id,
             "expires_in": 30 * 24 * 60 * 60  # 30 days in seconds
         }
+    except HTTPException:
+        # Re-raise HTTP exceptions as-is
+        raise
     except Exception as e:
+        # Log the full error for debugging
+        import traceback
+        print(f"Error in generate_token: {str(e)}")
+        print(traceback.format_exc())
+
         raise HTTPException(
             status_code=status.HTTP_400_BAD_REQUEST,
             detail=f"Error generating token: {str(e)}"
